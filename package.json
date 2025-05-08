@@ -1,0 +1,26 @@
+{
+  "name": "mern-blog",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch --trace-warnings --env-file=.env backend/index.js",
+    "start": "node --env-file=.env backend/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CalebKeson/mern-blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CalebKeson/mern-blog/issues"
+  },
+  "homepage": "https://github.com/CalebKeson/mern-blog#readme",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}
