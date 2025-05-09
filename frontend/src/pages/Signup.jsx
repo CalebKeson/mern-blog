@@ -1,8 +1,56 @@
-import { Button, Label, TextInput } from "flowbite-react";
+import { Button, Label, TextInput, Alert, Spinner } from "flowbite-react";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const [formdata, setFormData] = React.useState({});
+  const [error, setError] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formdata, [e.target.id]: e.target.value.trim() });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    if (!formdata.username) {
+      setError({ message: "Please provide a username!" });
+      return;
+    }
+    if (!formdata.email) {
+      setError({ message: "Please provide an email!" });
+      return;
+    }
+    if (!formdata.password) {
+      setError({ message: "Please provide a password!" });
+      return;
+    }
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formdata),
+      });
+      const data = await response.json();
+      if (data.success === false) {
+        setError(data);
+        return;
+      }
+      setLoading(false);
+      navigate("/");
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+      console.error("Error signing up:", error);
+    }
+  };
   return (
     <div className="min-h-screen mt-20">
       <div className="flex gap-8 p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
@@ -25,14 +73,15 @@ const Signup = () => {
         </div>
         {/* right side */}
         <div className="flex-1 mt-5 md:mt-0">
-          <form className="flex flex-col gap-5 mt-5">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-5">
             <div>
               <Label htmlFor="username">Username</Label>
               <TextInput
                 type="text"
                 placeholder="Username"
                 id="username"
-                required
+                value={formdata.username}
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -41,7 +90,8 @@ const Signup = () => {
                 type="email"
                 placeholder="example@gmail.com"
                 id="email"
-                required
+                value={formdata.email}
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -50,14 +100,22 @@ const Signup = () => {
                 type="password"
                 placeholder="Password"
                 id="password"
-                required
+                value={formdata.password}
+                onChange={handleChange}
               />
             </div>
             <Button
+              disabled={loading}
               type="submit"
               className="bg-gradient-to-br from-purple-600 to-pink-500 text-white hover:bg-gradient-to-bl cursor-pointer"
             >
-              Sign Up
+              {loading ? (
+                <>
+                  <Spinner size="sm" /> <span className="pl-3">Loading...</span>
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
           </form>
           <div>
@@ -71,6 +129,15 @@ const Signup = () => {
               </Link>
             </p>
           </div>
+          {error && (
+            <Alert
+              color="failure"
+              className="mt-5"
+              onDismiss={() => setError(null)}
+            >
+              {error.message}
+            </Alert>
+          )}
         </div>
       </div>
     </div>
