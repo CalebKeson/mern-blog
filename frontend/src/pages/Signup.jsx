@@ -44,7 +44,7 @@ const Signup = () => {
         return;
       }
       setLoading(false);
-      navigate("/");
+      navigate("/sign-in");
     } catch (error) {
       setError(error);
       setLoading(false);
@@ -74,6 +74,10 @@ const Signup = () => {
         {/* right side */}
         <div className="flex-1 mt-5 md:mt-0">
           <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-5">
+            <h1 className="text-2xl font-bold">Create an account</h1>
+            <p className="text-sm">
+              Enter your details to create an account.
+            </p>
             <div>
               <Label htmlFor="username">Username</Label>
               <TextInput
