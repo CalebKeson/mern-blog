@@ -1,11 +1,19 @@
 import { Button, Label, TextInput, Alert, Spinner } from "flowbite-react";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/userSlice.js";
 
 const Signin = () => {
   const [formdata, setFormData] = React.useState({});
-  const [error, setError] = React.useState(null);
-  const [loading, setLoading] = React.useState(false);
+
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
 
@@ -17,16 +25,15 @@ const Signin = () => {
     e.preventDefault();
     // Handle form submission logic here
     if (!formdata.email) {
-      setError({ message: "Please provide an email!" });
+      dispatch(signInFailure({ message: "Please provide an email!" }));
       return;
     }
     if (!formdata.password) {
-      setError({ message: "Please provide a password!" });
+      dispatch(signInFailure({ message: "Please provide a password!" }));
       return;
     }
     try {
-      setLoading(true);
-      setError(null);
+      dispatch(signInStart());
       const response = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -36,14 +43,15 @@ const Signin = () => {
       });
       const data = await response.json();
       if (data.success === false) {
-        setError(data);
+        dispatch(signInFailure(data));
         return;
       }
-      setLoading(false);
-      navigate("/");
+      if (response.ok) {
+        dispatch(signInSuccess(data));
+        navigate("/");
+      }
     } catch (error) {
-      setError(error);
-      setLoading(false);
+      dispatch(signInFailure(error));
       console.error("Error signing up:", error);
     }
   };
@@ -130,7 +138,7 @@ const Signin = () => {
             <Alert
               color="failure"
               className="mt-5"
-              onDismiss={() => setError(null)}
+              onDismiss={() => dispatch(signInFailure(null))}
             >
               {error.message}
             </Alert>
