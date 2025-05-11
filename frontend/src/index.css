@@ -1,3 +1,27 @@
 @import "tailwindcss"; 
 @plugin "flowbite-react/plugin/tailwindcss";
 @source "../.flowbite-react/class-list.json";
+
+/* body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  } */
+  
+  header, footer, nav {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  /* Force dark mode on all Flowbite components */
+/* .dark {
+    --bg-color: rgb(16, 23, 42);
+    --text-color: #e2e8f0;
+  } */
+  
+  /* Apply dark mode to body and other elements */
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+  }
