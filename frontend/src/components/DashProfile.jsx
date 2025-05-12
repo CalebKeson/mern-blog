@@ -37,6 +37,7 @@ const Profile = () => {
 
   // console.log(currentUser);
 
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -66,7 +67,7 @@ const Profile = () => {
     setShowModal(false);
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`/api/user/delete/${currentUser.user._id}`, {
         method: "DELETE",
       });
       const data = await res.json();

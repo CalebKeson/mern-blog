@@ -32,6 +32,8 @@ const Header = () => {
     // console.log("Theme toggled");
   }
 
+  // console.log(currentUser);
+
   const handleSignout = async () => {
       try {
         const res = await fetch("/api/user/signout", {
@@ -86,7 +88,7 @@ const Header = () => {
             label={
               <Avatar
                 alt="User settings"
-                img={currentUser.user.profilePicture}
+                img={currentUser?.user.profilePicture}
                 rounded={true}
                 className="cursor-pointer"
               />

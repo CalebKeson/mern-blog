@@ -82,6 +82,7 @@ export const signin = async (req, res, next) => {
     const token = jwt.sign(
       {
         id: existingUser._id,
+        isAdmin: existingUser.isAdmin
       },
       process.env.JWT_SECRET,
       {
@@ -124,6 +125,7 @@ export const googleAuth = async ( req, res, next ) => {
       const token = jwt.sign(
         {
           id: existingUser._id,
+          isAdmin: existingUser.isAdmin
         },
         process.env.JWT_SECRET,
         {
@@ -149,6 +151,7 @@ export const googleAuth = async ( req, res, next ) => {
             email: existingUser.email,
             isVerified: existingUser.isVerified,
             profilePicture: existingUser.profilePicture,
+            isAdmin: existingUser.isAdmin
           }
         });
     } else {
@@ -175,8 +178,7 @@ export const googleAuth = async ( req, res, next ) => {
       const token = jwt.sign(
         {
           id: result._id,
-          email: result.email,
-          isVerified: result.isVerified,
+          isAdmin: result.isAdmin
         },
         process.env.JWT_SECRET,
         {
@@ -204,6 +206,7 @@ export const googleAuth = async ( req, res, next ) => {
             email: result.email,
             isVerified: result.isVerified,
             profilePicture: result.profilePicture,
+            isAdmin: result.isAdmin
           },
         }); 
     }
