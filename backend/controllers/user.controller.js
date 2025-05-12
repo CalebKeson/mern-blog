@@ -11,7 +11,7 @@ export const test = (req, res) => {
 export const updateUser = async (req, res, next) => {
   const { userId } = req.params;
   const { id } = req.user;
-//   const { username, email, password } = req.body;
+  //   const { username, email, password } = req.body;
 
   if (userId !== id) {
     return next(errorHandler(403, "You can only update your account!"));
@@ -50,9 +50,9 @@ export const updateUser = async (req, res, next) => {
       userId,
       {
         $set: {
-          username:req.body.username,
+          username: req.body.username,
           email: req.body.email,
-          password: req.body.password
+          password: req.body.password,
         },
       },
       { new: true }
@@ -73,14 +73,26 @@ export const updateUser = async (req, res, next) => {
 };
 
 export const deleteUser = async (req, res, next) => {
-    if (req.user.id !== req.params.userId) {
-        return next(errorHandler(403, 'You are not allowed to delete this account!'))
-    }
+  if (req.user.id !== req.params.userId) {
+    return next(
+      errorHandler(403, "You are not allowed to delete this account!")
+    );
+  }
 
-    try {
-        await User.findByIdAndDelete(req.params.userId)
-        return res.status(200).json({ message: "User deleted successfully!"})
-    } catch (error) {
-        next(error)
-    }
-}
+  try {
+    await User.findByIdAndDelete(req.params.userId);
+    return res.status(200).json({ message: "User deleted successfully!" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const signout = async (req, res, next) => {
+  try {
+    return res
+      .clearCookie("access_token")
+      .json({ message: "User logged out successfully!" });
+  } catch (error) {
+    next(error);
+  }
+};

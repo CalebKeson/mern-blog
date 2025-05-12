@@ -14,10 +14,12 @@ import {
   updateUserFailure,
   deleteUserStart,
   deleteUserSuccess,
-  deleteUserFailure
+  deleteUserFailure,
+  signoutSuccess,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -29,8 +31,9 @@ const Profile = () => {
   const [showModal, setShowModal] = useState(false);
   const filePickerRef = useRef();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { error } = currentUser
+  const { error } = currentUser;
 
   // console.log(currentUser);
 
@@ -60,20 +63,40 @@ const Profile = () => {
   };
 
   const handleDeleteUser = async () => {
-    setShowModal(false)
+    setShowModal(false);
     try {
-      dispatch(deleteUserStart())
-      const res = await fetch(`/api/user/delete/${currentUser._id}`,{
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
         method: "DELETE",
-      })
-      const data = await res.json()
+      });
+      const data = await res.json();
       if (!res.ok) {
-        dispatch(deleteUserFailure(data.message))
+        dispatch(deleteUserFailure(data.message));
       } else {
-        dispatch(deleteUserSuccess(data))
+        dispatch(deleteUserSuccess(data));
+        navigate("/sign-up");
       }
     } catch (error) {
-      dispatch(deleteUserFailure(error.message))
+      dispatch(deleteUserFailure(error.message));
+    }
+  };
+
+  const handleSignout = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+        navigate("/sign-in");
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -170,7 +193,9 @@ const Profile = () => {
         >
           Delete Account
         </span>
-        <span className="text-red-700 cursor-pointer">Sign Out</span>
+        <span onClick={handleSignout} className="text-red-700 cursor-pointer">
+          Sign Out
+        </span>
       </div>
       {updatedUserSuccess && (
         <Alert color="success" className="mt-5">
@@ -203,12 +228,12 @@ const Profile = () => {
               </h3>
               <div className="flex justify-center gap-4">
                 <Button
-                  className="bg-red-700 text-white hover:bg-red-600"
+                  className="bg-red-700 text-white hover:bg-red-600 cursor-pointer"
                   onClick={handleDeleteUser}
                 >
                   Yes, I'm sure
                 </Button>
-                <Button color="light" onClick={() => setShowModal(false)}>
+                <Button color="light" onClick={() => setShowModal(false)} className="cursor-pointer">
                   No, cancel
                 </Button>
               </div>
