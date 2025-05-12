@@ -1,12 +1,23 @@
-import { Alert, Button, TextInput } from "flowbite-react";
+import {
+  Alert,
+  Button,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  TextInput,
+} from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 const Profile = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -15,8 +26,11 @@ const Profile = () => {
   const [formData, setFormData] = useState({});
   const [updatedUserSuccess, setUpdateUserSuccess] = useState(null);
   const [updatedUserError, setUpdateUserError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const filePickerRef = useRef();
   const dispatch = useDispatch();
+
+  const { error } = currentUser
 
   // console.log(currentUser);
 
@@ -45,6 +59,24 @@ const Profile = () => {
     });
   };
 
+  const handleDeleteUser = async () => {
+    setShowModal(false)
+    try {
+      dispatch(deleteUserStart())
+      const res = await fetch(`/api/user/delete/${currentUser._id}`,{
+        method: "DELETE",
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        dispatch(deleteUserFailure(data.message))
+      } else {
+        dispatch(deleteUserSuccess(data))
+      }
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message))
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUpdateUserSuccess(null);
@@ -71,7 +103,7 @@ const Profile = () => {
         setUpdateUserSuccess("Account updated successfully!");
         setTimeout(() => {
           setUpdateUserSuccess(null);
-        }, 10000); 
+        }, 10000);
       }
     } catch (error) {
       dispatch(updateUserFailure(error));
@@ -132,7 +164,12 @@ const Profile = () => {
         </Button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete Account</span>
+        <span
+          onClick={() => setShowModal(true)}
+          className="text-red-700 cursor-pointer"
+        >
+          Delete Account
+        </span>
         <span className="text-red-700 cursor-pointer">Sign Out</span>
       </div>
       {updatedUserSuccess && (
@@ -144,6 +181,40 @@ const Profile = () => {
         <Alert color="failure" className="mt-5">
           {updatedUserError}
         </Alert>
+      )}
+      {error && (
+        <Alert color="failure" className="mt-5">
+          {error}
+        </Alert>
+      )}
+      {showModal && (
+        <Modal
+          show={showModal}
+          onClose={() => setShowModal(false)}
+          size="md"
+          popup
+        >
+          <ModalHeader />
+          <ModalBody>
+            <div className="text-center">
+              <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+              <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-200">
+                Are you sure you want to delete your account?
+              </h3>
+              <div className="flex justify-center gap-4">
+                <Button
+                  className="bg-red-700 text-white hover:bg-red-600"
+                  onClick={handleDeleteUser}
+                >
+                  Yes, I'm sure
+                </Button>
+                <Button color="light" onClick={() => setShowModal(false)}>
+                  No, cancel
+                </Button>
+              </div>
+            </div>
+          </ModalBody>
+        </Modal>
       )}
     </div>
   );

@@ -144,7 +144,7 @@ export const googleAuth = async ( req, res, next ) => {
           success: true,
           message: "User logged in successfully!",
           user: {
-            id: existingUser._id,
+            _id: existingUser._id,
             username: existingUser.username,
             email: existingUser.email,
             isVerified: existingUser.isVerified,
@@ -199,7 +199,7 @@ export const googleAuth = async ( req, res, next ) => {
           success: true,
           message: "User created successfully!",
           user: {
-            id: result._id,
+            _id: result._id,
             username: result.username,
             email: result.email,
             isVerified: result.isVerified,
