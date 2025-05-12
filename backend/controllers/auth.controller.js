@@ -148,7 +148,7 @@ export const googleAuth = async ( req, res, next ) => {
             username: existingUser.username,
             email: existingUser.email,
             isVerified: existingUser.isVerified,
-            profilePic: existingUser.profilePicture,
+            profilePicture: existingUser.profilePicture,
           }
         });
     } else {
@@ -203,7 +203,7 @@ export const googleAuth = async ( req, res, next ) => {
             username: result.username,
             email: result.email,
             isVerified: result.isVerified,
-            profilePic: result.profilePicture,
+            profilePicture: result.profilePicture,
           },
         }); 
     }

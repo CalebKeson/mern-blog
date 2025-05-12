@@ -61,7 +61,7 @@ const Header = () => {
             label={
               <Avatar
                 alt="User settings"
-                img={currentUser.user.profilePic}
+                img={currentUser.user.profilePicture}
                 rounded={true}
                 className="cursor-pointer"
               />
