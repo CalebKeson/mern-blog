@@ -25,7 +25,7 @@ mongoose
   });
 
 // cors
-app.use(cors()); 
+app.use(cors());  
 
 // cookie parser
 app.use(cookieParser());

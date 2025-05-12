@@ -19,10 +19,10 @@ import {
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [formData, setFormData] = useState({});
@@ -36,7 +36,6 @@ const Profile = () => {
   const { error } = currentUser;
 
   // console.log(currentUser);
-
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -181,11 +180,25 @@ const Profile = () => {
           onChange={handleChange}
         />
         <Button
+          className="cursor-pointer"
+          disabled={currentUser.loading}
           type="submit"
-          className="bg-gradient-to-br from-purple-600 to-blue-500 text-white hover:bg-gradient-to-bl cursor-pointer"
+          color="pink"
+          outline
+          // className="bg-gradient-to-br from-purple-600 to-blue-500 text-white hover:bg-gradient-to-bl cursor-pointer"
         >
-          {currentUser.loading ? "Loading..." : "Update"}
+          {loading ? "Loading..." : "Update"}
         </Button>
+        {currentUser.user.isAdmin && (
+          <Link to="/create-post">
+            <Button
+              type="submit"
+              className="bg-gradient-to-br from-purple-600 to-pink-500 text-white hover:bg-gradient-to-bl cursor-pointer w-full"
+            >
+              Create Post
+            </Button>
+          </Link>
+        )}
       </form>
       <div className="flex justify-between mt-5">
         <span
@@ -234,7 +247,11 @@ const Profile = () => {
                 >
                   Yes, I'm sure
                 </Button>
-                <Button color="light" onClick={() => setShowModal(false)} className="cursor-pointer">
+                <Button
+                  color="light"
+                  onClick={() => setShowModal(false)}
+                  className="cursor-pointer"
+                >
                   No, cancel
                 </Button>
               </div>
