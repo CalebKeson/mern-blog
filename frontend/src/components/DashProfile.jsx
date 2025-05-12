@@ -68,7 +68,7 @@ const Profile = () => {
         setUpdateUserError(data.message);
       } else {
         dispatch(updateUserSuccess(data));
-        setUpdateUserSuccess("User's profile updated successfully!");
+        setUpdateUserSuccess("Account updated successfully!");
         setTimeout(() => {
           setUpdateUserSuccess(null);
         }, 10000); 
