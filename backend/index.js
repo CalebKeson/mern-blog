@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
-import { error } from "console";
+import cookieParser from "cookie-parser";
 
 // create express app
 const app = express();
@@ -26,6 +26,9 @@ mongoose
 
 // cors
 app.use(cors());
+
+// cookie parser
+app.use(cookieParser());
 
 // listen on port 3000
 const PORT = process.env.PORT || 3000;
