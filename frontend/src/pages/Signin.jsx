@@ -9,6 +9,7 @@ import {
   signInSuccess,
 } from "../redux/user/userSlice.js";
 import OAuth from "../components/OAuth.jsx";
+import { HiMail } from "react-icons/hi";
 
 const Signin = () => {
   const [formdata, setFormData] = React.useState({});
@@ -88,6 +89,7 @@ const Signin = () => {
               <Label htmlFor="email">Email</Label>
               <TextInput
                 type="email"
+                icon={HiMail}
                 placeholder="example@gmail.com"
                 id="email"
                 value={formdata.email}
@@ -98,7 +100,7 @@ const Signin = () => {
               <Label htmlFor="password">Password</Label>
               <TextInput
                 type="password"
-                placeholder="********"
+                placeholder="**************"
                 id="password"
                 value={formdata.password}
                 onChange={handleChange}

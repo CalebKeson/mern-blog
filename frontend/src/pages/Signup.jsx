@@ -2,6 +2,7 @@ import { Button, Label, TextInput, Alert, Spinner } from "flowbite-react";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
+import { HiMail } from "react-icons/hi";
 
 const Signup = () => {
   const [formdata, setFormData] = React.useState({});
@@ -83,6 +84,7 @@ const Signup = () => {
               <Label htmlFor="username">Username</Label>
               <TextInput
                 type="text"
+                addon="@"
                 placeholder="Username"
                 id="username"
                 value={formdata.username}
@@ -93,6 +95,7 @@ const Signup = () => {
               <Label htmlFor="email">Email</Label>
               <TextInput
                 type="email"
+                icon={HiMail}
                 placeholder="example@gmail.com"
                 id="email"
                 value={formdata.email}
