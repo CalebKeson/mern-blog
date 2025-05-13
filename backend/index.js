@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
+import postRoutes from "./routes/post.route.js";
 import cookieParser from "cookie-parser";
 
 // create express app
@@ -38,6 +39,7 @@ app.listen(PORT, () => {
 
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/post", postRoutes);
 
 app.use((error, req, res, next) => {
   const statusCode = error.statusCode || 500;
