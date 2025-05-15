@@ -29,17 +29,17 @@ mongoose
 app.use(cors());  
 
 // cookie parser
-app.use(cookieParser());
+app.use(cookieParser()); 
 
 // listen on port 3000
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}!`);
-});
+}); 
 
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/post", postRoutes);
+app.use("/api/post", postRoutes); 
 
 app.use((error, req, res, next) => {
   const statusCode = error.statusCode || 500;
