@@ -49,7 +49,7 @@ const DashSidebar = () => {
             <SidebarItem
               active={tab === "profile"}
               icon={HiUser}
-              label={currentUser.user.isAdmin ? "Admin" : "User"}
+              label={currentUser?.user.isAdmin ? "Admin" : "User"}
               labelColor="dark"
               as="div"
             >

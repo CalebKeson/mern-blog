@@ -9,8 +9,9 @@ import Header from "./components/Header";
 import Contact from "./pages/Contact";
 import Footer from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
-import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute'
+import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
 import CreatePost from "./pages/CreatePost";
+import DashPosts from "./components/DashPosts";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="create-post" element={<CreatePost />} />
         </Route>
         <Route path="/contact" element={<Contact />} />
+        <Route path="/posts" element={<DashPosts />} />
       </Routes>
       <Footer />
     </BrowserRouter>

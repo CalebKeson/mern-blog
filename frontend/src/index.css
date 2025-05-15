@@ -1,5 +1,6 @@
 @import "tailwindcss"; 
 @plugin "flowbite-react/plugin/tailwindcss";
+@plugin 'tailwind-scrollbar';
 @source "../.flowbite-react/class-list.json";
 
 /* body {
@@ -7,7 +8,7 @@
     color: var(--text-color);
   } */
   
-  header, footer, nav {
+  header, footer, nav, table {
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;

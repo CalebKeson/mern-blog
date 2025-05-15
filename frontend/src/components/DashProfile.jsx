@@ -154,7 +154,7 @@ const Profile = () => {
           onClick={() => filePickerRef.current.click()}
         >
           <img
-            src={imageFileUrl || currentUser?.user.profilePicture}
+            src={imageFileUrl || currentUser?.user.profilePicture }
             alt="profile"
             className="h-full w-full rounded-full object-cover border-8 border-[lightgray]"
           />

@@ -6,22 +6,22 @@ import authRoutes from "./routes/auth.route.js";
 import postRoutes from "./routes/post.route.js";
 import cookieParser from "cookie-parser";
 
-// create express app
-const app = express();
+// create express app  
+const app = express();  
 
 // inform the app to use JSON data
-app.use(express.json());
+app.use(express.json());  
 
-// inform the app to use URL encoded data
+// inform the app to use URL encoded data 
 app.use(express.urlencoded({ extended: true }));
 
-// configure the database connection
+// configure the database connection 
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Successfully connected to MongoDB!");
   })
-  .catch((error) => {
+  .catch((error) => { 
     console.error("Error connecting to MongoDB:", error.message);
   });
 
