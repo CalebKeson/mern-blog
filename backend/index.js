@@ -29,7 +29,7 @@ mongoose
 app.use(cors());  
 
 // cookie parser
-app.use(cookieParser()); 
+app.use(cookieParser());  
 
 // listen on port 3000
 const PORT = process.env.PORT || 3000;
