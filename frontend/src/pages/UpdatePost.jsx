@@ -82,7 +82,8 @@ const UpdatePost = () => {
         setPublishError(data.message);
         setLoading(false);
         return;
-      } else {
+      } 
+      if (res.ok) {
         setPublishError(null);
         setLoading(false);
         navigate(`/post/${data.slug}`);
