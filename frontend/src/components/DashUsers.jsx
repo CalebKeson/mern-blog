@@ -61,27 +61,23 @@ const DashUsers = () => {
     }
   };
 
-  //   const handleDeleteUser = async () => {
-  //     setShowModal(false);
-  //     try {
-  //       const res = await fetch(
-  //         `/api/user/deleteUser/${userIdToDelete}/${currentUser.user._id}`,
-  //         {
-  //           method: "DELETE",
-  //         }
-  //       );
-  //       const data = await res.json();
-  //       if (!res.ok) {
-  //         console.log(data.message);
-  //       } else {
-  //         setUserPosts((prev) =>
-  //           prev.filter((post) => post._id !== postIdToDelete)
-  //         );
-  //       }
-  //     } catch (error) {
-  //       console.log(error.message);
-  //     }
-  //   };
+  const handleDeleteUser = async () => {
+    setShowModal(false);
+    try {
+      const res = await fetch(`/api/user/delete/${userIdToDelete}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
+        setShowModal(false)
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       {currentUser.user.isAdmin && users.length > 0 ? (
@@ -110,7 +106,9 @@ const DashUsers = () => {
                       className="w-10 h-10 object-cover rounded-full bg-gray-500"
                     />
                   </TableCell>
-                  <TableCell className="font-medium text-gray-900">{user.username}</TableCell>
+                  <TableCell className="font-medium text-gray-900">
+                    {user.username}
+                  </TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
                     {user.isAdmin ? (
@@ -163,7 +161,7 @@ const DashUsers = () => {
               <div className="flex justify-center gap-4">
                 <Button
                   className="bg-red-700 text-white hover:bg-red-600 cursor-pointer"
-                  //   onClick={handleDeletePost}
+                  onClick={handleDeleteUser}
                 >
                   Yes, I'm sure
                 </Button>
