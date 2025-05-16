@@ -14,6 +14,7 @@ import CreatePost from "./pages/CreatePost";
 import DashPosts from "./components/DashPosts";
 import UpdatePost from "./pages/UpdatePost";
 import DashUsers from "./components/DashUsers";
+import PostPage from "./pages/PostPage";
 
 const App = () => {
   return (
@@ -34,6 +35,8 @@ const App = () => {
         </Route>
         <Route path="/contact" element={<Contact />} />
         <Route path="/posts" element={<DashPosts />} />
+        <Route path="/post/:postSlug" element={<PostPage />} />
+
       </Routes>
       <Footer />
     </BrowserRouter>
