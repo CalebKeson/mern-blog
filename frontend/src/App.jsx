@@ -13,6 +13,7 @@ import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
 import CreatePost from "./pages/CreatePost";
 import DashPosts from "./components/DashPosts";
 import UpdatePost from "./pages/UpdatePost";
+import DashUsers from "./components/DashUsers";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
         <Route element={<OnlyAdminPrivateRoute />}>
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/update-post/:postId" element={<UpdatePost />} />
+          <Route path="/users/" element={<DashUsers />} />
         </Route>
         <Route path="/contact" element={<Contact />} />
         <Route path="/posts" element={<DashPosts />} />
