@@ -13,6 +13,7 @@ import {
   ModalBody,
   ModalHeader,
   Button,
+  Spinner,
 } from "flowbite-react";
 import { Link } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
@@ -24,19 +25,23 @@ const DashUsers = () => {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState("");
+  const [loading, setLoading] = useState(true);
   // console.log(userPosts);
   useEffect(() => {
     const fetchUsers = async () => {
+      setLoading(true);
       try {
         const res = await fetch("/api/user/getUsers");
         const data = await res.json();
         if (res.ok) {
+          setLoading(false);
           setUsers(data.users);
           if (data.users.length < 9) {
             setShowMore(false);
           }
         }
       } catch (error) {
+        setLoading(false);
         console.log(error.message);
       }
     };
@@ -70,7 +75,7 @@ const DashUsers = () => {
       const data = await res.json();
       if (res.ok) {
         setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
-        setShowModal(false)
+        setShowModal(false);
       } else {
         console.log(data.message);
       }
@@ -78,6 +83,15 @@ const DashUsers = () => {
       console.log(error.message);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen w-full">
+        <Spinner size="xl" />
+      </div>
+    );
+  }
+
   return (
     <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       {currentUser.user.isAdmin && users.length > 0 ? (

@@ -13,6 +13,7 @@ import {
   ModalBody,
   ModalHeader,
   Button,
+  Spinner,
 } from "flowbite-react";
 import { Link } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
@@ -23,21 +24,25 @@ const DashPosts = () => {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState("");
+  const [loading, setLoading] = useState(true);
   // console.log(userPosts);
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setLoading(true);
         const res = await fetch(
           `/api/post/getPosts?userId=${currentUser.user._id}`
         );
         const data = await res.json();
         if (res.ok) {
+          setLoading(false);
           setUserPosts(data.posts);
           if (data.posts.length < 9) {
             setShowMore(false);
           }
         }
       } catch (error) {
+        setLoading(false);
         console.log(error.message);
       }
     };
@@ -85,6 +90,15 @@ const DashPosts = () => {
       console.log(error.message);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen w-full">
+        <Spinner size="xl" />
+      </div>
+    );
+  }
+
   return (
     <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       {currentUser.user.isAdmin && userPosts.length > 0 ? (
