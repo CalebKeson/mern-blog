@@ -5,7 +5,7 @@ import { FaThumbsUp } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Button, Textarea } from "flowbite-react";
 
-const Comment = ({ comment, onLike, onEdit }) => {
+const Comment = ({ comment, onLike, onEdit, onDelete }) => {
   const [user, setUser] = useState({});
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -25,7 +25,7 @@ const Comment = ({ comment, onLike, onEdit }) => {
         }
         const res = await fetch(`/api/user/${comment.userId}`);
         const data = await res.json();
-        console.log(data);
+
         if (!res.ok) {
           setError(data.message);
         }
@@ -53,18 +53,18 @@ const Comment = ({ comment, onLike, onEdit }) => {
       const res = await fetch(`/api/comment/editComment/${comment._id}`, {
         method: "PUT",
         headers: {
-          'Content-Type': "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({content: editedContent})
-      })
+        body: JSON.stringify({ content: editedContent }),
+      });
       if (res.ok) {
         setIsEditing(false);
-        onEdit(comment, editedContent)
+        onEdit(comment, editedContent);
       }
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
     }
-  }
+  };
   return (
     <div className="flex p-4 border-b border-gray-200 dark:border-gray-600 text-sm">
       <div className="flex-shrink-0 mr-3">
@@ -91,13 +91,20 @@ const Comment = ({ comment, onLike, onEdit }) => {
               onChange={(e) => setEditedContent(e.target.value)}
             ></Textarea>
             <div className="flex justify-end gap-2 text-xs">
-              <Button type="button" size="sm" color="slate" onClick={handleSave}>
+              <Button
+                className="cursor-pointer"
+                type="button"
+                size="sm"
+                color="teal"
+                onClick={handleSave}
+              >
                 Save
               </Button>
               <Button
+                className="cursor-pointer"
                 type="button"
                 size="sm"
-                color="slate"
+                color="teal"
                 outline
                 onClick={() => setIsEditing(false)}
               >
@@ -127,13 +134,22 @@ const Comment = ({ comment, onLike, onEdit }) => {
               {currentUser?.user &&
                 (currentUser._id === comment.userId ||
                   currentUser?.user.isAdmin) && (
-                  <button
-                    type="button"
-                    onClick={handleEdit}
-                    className="text-gray-400 hover:text-blue-700 cursor-pointer"
-                  >
-                    Edit
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleEdit}
+                      className="text-gray-400 hover:text-blue-700 cursor-pointer"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={()=>onDelete(comment?._id)}
+                      className="text-gray-400 hover:text-red-700 cursor-pointer"
+                    >
+                      Delete
+                    </button>
+                  </>
                 )}
             </div>
           </>
