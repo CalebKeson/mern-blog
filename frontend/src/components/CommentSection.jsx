@@ -1,7 +1,7 @@
 import { Alert, Button, Textarea } from "flowbite-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Comment from "./Comment";
 
 const CommentSection = ({ postId }) => {
@@ -10,7 +10,11 @@ const CommentSection = ({ postId }) => {
   const [commentError, setCommentError] = useState(null);
   const [comments, setComments] = useState([]);
 
-  console.log(comments);
+  const navigate = useNavigate();
+  const [likingCommentId, setLikingCommentId] = useState(null);
+  const [lastLikeTime, setLastLikeTime] = useState(0);
+
+  // console.log(comments);
   useEffect(() => {
     const getComments = async () => {
       try {
@@ -51,7 +55,7 @@ const CommentSection = ({ postId }) => {
       if (res.ok) {
         setComment("");
         setCommentError(null);
-        setComments([data, ...comments])
+        setComments([data, ...comments]);
       }
     } catch (error) {
       setCommentError(error.message);
@@ -59,6 +63,115 @@ const CommentSection = ({ postId }) => {
     }
   };
 
+  // const handleLike = async (commentId) => {
+  //   try {
+  //     if (!currentUser) {
+  //       navigate("/sig-in");
+  //       return;
+  //     }
+  //     const res = await fetch(`/api/comment/likeComment/${commentId}`, {
+  //       method: "PUT",
+  //     });
+
+  //     if (res.ok) {
+  //       const data = await res.json();
+  //       setComments(
+  //         comments.map((comment) => {
+  //           comment._id === commentId
+  //             ? {
+  //                 ...comment,
+  //                 likes: data.likes,
+  //                 numberOfLikes: data.numberOfLikes,
+  //               }
+  //             : comment;
+  //         })
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
+
+  //   const handleLike = async (commentId) => {
+  //   try {
+  //     if (!currentUser) {
+  //       navigate("/sign-in");
+  //       return;
+  //     }
+  //     const res = await fetch(`/api/comment/likeComment/${commentId}`, {
+  //       method: "PUT",
+  //     });
+
+  //     if (res.ok) {
+  //       const data = await res.json();
+  //       setComments(
+  //         comments.map((comment) =>
+  //           comment._id === commentId
+  //             ? {
+  //                 ...comment,
+  //                 likes: data.likes,
+  //                 numberOfLikes: data.numberOfLikes, // Use data.numberOfLikes instead of data.likes.length
+  //               }
+  //             : comment
+  //         )
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
+
+  const handleLike = useCallback(
+    async (commentId) => {
+      try {
+        // Debounce check
+        const now = Date.now();
+        if (now - lastLikeTime < 300) return;
+        setLastLikeTime(now);
+
+        // Optimistic update
+        setComments((prev) =>
+          prev.map((comment) => {
+            if (comment._id === commentId) {
+              const isLiked = comment.likes.includes(currentUser._id);
+              return {
+                ...comment,
+                likes: isLiked
+                  ? comment.likes.filter((id) => id !== currentUser._id)
+                  : [...comment.likes, currentUser._id],
+                numberOfLikes: isLiked
+                  ? comment.numberOfLikes - 1
+                  : comment.numberOfLikes + 1,
+              };
+            }
+            return comment;
+          })
+        );
+
+        setLikingCommentId(commentId);
+
+        const res = await fetch(`/api/comment/likeComment/${commentId}`, {
+          method: "PUT",
+        });
+
+        if (!res.ok) throw new Error("Like failed");
+
+        const data = await res.json();
+
+        // Final sync with server
+        setComments((prev) =>
+          prev.map((c) => (c._id === commentId ? { ...c, ...data } : c))
+        );
+      } catch (error) {
+        // Revert on error
+        setComments(comments);
+        console.error("Like error:", error);
+      } finally {
+        setLikingCommentId(null);
+      }
+    },
+    [currentUser, navigate, comments, lastLikeTime]
+  );
   return (
     <div className="max-w-2xl mx-auto w-full p-3">
       {currentUser?.user ? (
@@ -120,17 +233,16 @@ const CommentSection = ({ postId }) => {
         <p className="text-sm my-5">No comments yet!</p>
       ) : (
         <>
-        
-        <div className="text-sm my-5 flex items-center gap-1">
-          <p>Comments</p>
-          <div className="border border-gray-400 py-1 px-2 rounded-sm">
-            <p>{comments.length}</p>
+          <div className="text-sm my-5 flex items-center gap-1">
+            <p>Comments</p>
+            <div className="border border-gray-400 py-1 px-2 rounded-sm">
+              <p>{comments.length}</p>
+            </div>
           </div>
-        </div>
 
-        {comments.map((comment) => (
-          <Comment key={comment._id} comment={comment}/>
-        ))}
+          {comments.map((comment, index) => (
+            <Comment key={index} comment={comment} onLike={handleLike} />
+          ))}
         </>
       )}
     </div>
