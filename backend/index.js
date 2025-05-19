@@ -18,13 +18,13 @@ app.use(express.urlencoded({ extended: true }));
 
 // configure the database connection 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI) 
   .then(() => {
     console.log("Successfully connected to MongoDB!");
   })
   .catch((error) => { 
     console.error("Error connecting to MongoDB:", error.message);
-  });
+  }); 
 
 // cors
 app.use(cors());  
